@@ -1,11 +1,13 @@
 package adyen.com.adyenpaysdk;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import adyen.com.adyenpaysdk.controllers.NetworkController;
 import adyen.com.adyenpaysdk.exceptions.EncrypterException;
 import adyen.com.adyenpaysdk.exceptions.NoPublicKeyExeption;
 import adyen.com.adyenpaysdk.services.PaymentService;
@@ -35,14 +37,19 @@ public class Adyen {
 
     }
 
-    private Adyen() {
+    private Adyen(Context context) {
+        NetworkController.init(context);
+    }
 
+    public static void init(Context context) {
+        mInstance = new Adyen(context);
     }
 
     public static Adyen getInstance() {
         if(mInstance == null) {
-            mInstance = new Adyen();
+            throw new NullPointerException();
         }
+
         return mInstance;
     }
 

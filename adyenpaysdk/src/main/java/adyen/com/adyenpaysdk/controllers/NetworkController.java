@@ -11,27 +11,34 @@ import com.android.volley.toolbox.Volley;
 /**
  * Created by andrei on 11/11/15.
  */
-public class NetworkController extends Application {
+public class NetworkController {
 
     private static final String TAG = NetworkController.class.getSimpleName();
 
     private RequestQueue mRequestQueue;
 
     private static NetworkController mInstance;
+    private Context mContext;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        mInstance = this;
+    private NetworkController(Context context) {
+        mContext = context;
+    }
+
+    public static void init(Context context) {
+        mInstance = new NetworkController(context);
     }
 
     public static synchronized NetworkController getInstance() {
+        if(mInstance == null) {
+            throw new NullPointerException();
+        }
+
         return mInstance;
     }
 
     public RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {
-            mRequestQueue = Volley.newRequestQueue(getApplicationContext());
+            mRequestQueue = Volley.newRequestQueue(getGlobalContext());
         }
         return mRequestQueue;
     }
@@ -53,7 +60,6 @@ public class NetworkController extends Application {
     }
 
     public Context getGlobalContext() {
-        return getApplicationContext();
+        return mContext;
     }
-
 }
